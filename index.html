@@ -1,0 +1,446 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Shield, 
+  Code, 
+  Smartphone, 
+  Users, 
+  Calendar, 
+  MessageSquare, 
+  ArrowRight, 
+  Star, 
+  Lock, 
+  Menu, 
+  X,
+  Instagram,
+  ChevronRight,
+  Globe,
+  Heart
+} from 'lucide-react';
+
+// Design System & Mock Data
+const COLORS = {
+  primary: '#D4AF37', // Gold
+  secondary: '#1A1A1A', // Charcoal
+  accent: '#2D2D2D', // Lighter Grey
+  text: '#F5F5F5',
+  textMuted: '#A0A0A0'
+};
+
+const MODELS = [
+  {
+    id: 1,
+    name: "Valentina",
+    role: "Lead Interface Specialist",
+    specialty: "UX/UI Design & High-End Networking",
+    description: "Especialista em criar conexões fluidas e experiências memoráveis. Fluente em 3 idiomas.",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600",
+    tags: ["Internacional", "Elegante", "Digital Native"]
+  },
+  {
+    id: 2,
+    name: "Isabella",
+    role: "Senior Web Architect",
+    specialty: "Full Stack Experiences & Social Engineering",
+    description: "Sofisticação técnica aliada a uma presença magnética em qualquer evento corporativo.",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=600",
+    tags: ["Business", "Tech Savvy", "Exclusive"]
+  },
+  {
+    id: 3,
+    name: "Sophia",
+    role: "Mobile Solutions Expert",
+    specialty: "App Prototyping & Lifestyle Consulting",
+    description: "Dinamismo e beleza. Especialista em acompanhar mentes criativas e disruptivas.",
+    image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=600",
+    tags: ["Vibrant", "Creative", "Discreet"]
+  }
+];
+
+const App = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('home');
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Simple Router logic
+  const renderContent = () => {
+    switch(activeTab) {
+      case 'home': return <HomeHero setActiveTab={setActiveTab} />;
+      case 'portfolio': return <PortfolioSection />;
+      case 'tech': return <TechSection />;
+      case 'booking': return <BookingSection />;
+      default: return <HomeHero setActiveTab={setActiveTab} />;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0F0F0F] text-white font-sans selection:bg-gold selection:text-black">
+      {/* Navigation */}
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-black/90 backdrop-blur-md py-4 border-b border-white/10' : 'bg-transparent py-6'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => setActiveTab('home')}>
+            <div className="w-10 h-10 bg-gradient-to-tr from-gold to-yellow-600 rounded-lg flex items-center justify-center">
+              <Shield size={24} className="text-black" />
+            </div>
+            <span className="text-2xl font-bold tracking-tighter uppercase">Nexxus</span>
+          </div>
+
+          <div className="hidden md:flex gap-8 text-sm font-medium uppercase tracking-widest items-center">
+            {['home', 'portfolio', 'tech', 'booking'].map((tab) => (
+              <button 
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`hover:text-gold transition-colors ${activeTab === tab ? 'text-gold' : 'text-gray-400'}`}
+              >
+                {tab === 'tech' ? 'Soluções Digitais' : tab === 'portfolio' ? 'Portfólio' : tab === 'booking' ? 'Agendamento' : 'Início'}
+              </button>
+            ))}
+            <button 
+              onClick={() => setActiveTab('booking')}
+              className="bg-gold text-black px-6 py-2 rounded-full font-bold hover:bg-white transition-all transform hover:scale-105"
+            >
+              RESERVAR AGORA
+            </button>
+          </div>
+
+          <button className="md:hidden text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? <X size={30} /> : <Menu size={30} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-black z-40 flex flex-col items-center justify-center gap-8 text-2xl font-bold">
+          <button onClick={() => {setActiveTab('home'); setIsMenuOpen(false)}}>Início</button>
+          <button onClick={() => {setActiveTab('portfolio'); setIsMenuOpen(false)}}>Portfólio</button>
+          <button onClick={() => {setActiveTab('tech'); setIsMenuOpen(false)}}>Soluções Tech</button>
+          <button onClick={() => {setActiveTab('booking'); setIsMenuOpen(false)}}>Reservar</button>
+        </div>
+      )}
+
+      {/* Main Content Area */}
+      <main className="pt-20">
+        {renderContent()}
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-black border-t border-white/5 py-12 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div className="col-span-1 md:col-span-2">
+            <h3 className="text-xl font-bold mb-4 text-gold tracking-widest uppercase">Nexxus Digital Solutions</h3>
+            <p className="text-gray-500 max-w-sm">
+              Combinando excelência técnica com experiências exclusivas. Redefinindo o padrão de lifestyle e suporte digital para o mercado de luxo.
+            </p>
+            <div className="flex gap-4 mt-6">
+              <Instagram className="text-gray-400 hover:text-gold cursor-pointer" />
+              <MessageSquare className="text-gray-400 hover:text-gold cursor-pointer" />
+            </div>
+          </div>
+          <div>
+            <h4 className="font-bold mb-4 uppercase text-sm tracking-widest">Navegação</h4>
+            <ul className="text-gray-500 space-y-2 text-sm">
+              <li>Privacidade & Termos</li>
+              <li>Carreiras Tech</li>
+              <li>Blog de Lifestyle</li>
+              <li>Suporte Prioritário</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold mb-4 uppercase text-sm tracking-widest">Contato Seguro</h4>
+            <p className="text-gray-500 text-sm">WhatsApp Business: +55 (11) 9999-9999</p>
+            <p className="text-gray-500 text-sm mt-2 font-mono">contato@nexxus-digital.com</p>
+            <div className="mt-4 flex items-center gap-2 text-xs text-green-500">
+              <Lock size={12} />
+              Criptografia End-to-End Ativa
+            </div>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/5 text-center text-xs text-gray-600">
+          © 2024 Nexxus Group. Todos os direitos reservados. Design by Nexxus Tech Division.
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+// --- SUB-COMPONENTS ---
+
+const HomeHero = ({ setActiveTab }) => (
+  <section className="relative h-[90vh] flex items-center justify-center overflow-hidden px-6">
+    <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#0F0F0F] z-10" />
+      <img 
+        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000" 
+        className="w-full h-full object-cover opacity-50 grayscale hover:grayscale-0 transition-all duration-1000"
+        alt="Agência Corporativa"
+      />
+    </div>
+    
+    <div className="relative z-20 text-center max-w-4xl space-y-6">
+      <div className="inline-block border border-gold/30 bg-gold/5 px-4 py-1 rounded-full text-gold text-xs font-bold tracking-[0.3em] uppercase mb-4 animate-pulse">
+        Premium Experience & Development
+      </div>
+      <h1 className="text-5xl md:text-8xl font-black tracking-tight leading-none uppercase">
+        Soluções Digitais <br/>
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold via-yellow-200 to-gold">
+          Sem Fronteiras
+        </span>
+      </h1>
+      <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
+        Na Nexxus, unimos inteligência tecnológica e acompanhamento de alto padrão para líderes que demandam o excepcional em todas as áreas da vida.
+      </p>
+      <div className="flex flex-col md:flex-row gap-4 justify-center pt-8">
+        <button 
+          onClick={() => setActiveTab('portfolio')}
+          className="bg-gold text-black px-10 py-4 rounded-full font-bold text-lg flex items-center justify-center gap-2 hover:bg-white transition-all group"
+        >
+          EXPLORAR PORTFÓLIO <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+        </button>
+        <button 
+          onClick={() => setActiveTab('tech')}
+          className="border border-white/20 bg-white/5 backdrop-blur-sm px-10 py-4 rounded-full font-bold text-lg hover:bg-white/10 transition-all"
+        >
+          SERVIÇOS TECH
+        </button>
+      </div>
+    </div>
+  </section>
+);
+
+const PortfolioSection = () => (
+  <section className="py-24 px-6 max-w-7xl mx-auto">
+    <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+      <div className="space-y-4">
+        <h2 className="text-4xl md:text-6xl font-bold uppercase tracking-tighter">Nossas <span className="text-gold">Especialistas</span></h2>
+        <p className="text-gray-400 max-w-md">Equipe multidisciplinar preparada para suporte em eventos, consultoria de imagem e desenvolvimento de projetos.</p>
+      </div>
+      <div className="flex gap-4">
+        <span className="text-xs font-bold text-gold border border-gold/20 px-3 py-1 rounded tracking-widest">DISPONIBILIDADE 24/7</span>
+        <span className="text-xs font-bold text-gray-500 border border-white/10 px-3 py-1 rounded tracking-widest">SIGILO ABSOLUTO</span>
+      </div>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {MODELS.map((model) => (
+        <div key={model.id} className="group relative bg-[#1A1A1A] rounded-2xl overflow-hidden border border-white/5 hover:border-gold/30 transition-all duration-500 transform hover:-translate-y-2">
+          <div className="aspect-[3/4] overflow-hidden">
+            <img src={model.image} alt={model.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-100" />
+          </div>
+          <div className="p-8 space-y-4">
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="text-2xl font-bold">{model.name}</h3>
+                <p className="text-gold text-sm font-medium">{model.role}</p>
+              </div>
+              <div className="flex gap-1">
+                {[1,2,3,4,5].map(i => <Star key={i} size={12} className="fill-gold text-gold" />)}
+              </div>
+            </div>
+            <p className="text-gray-400 text-sm italic">"{model.description}"</p>
+            <div className="flex flex-wrap gap-2 pt-2">
+              {model.tags.map(tag => (
+                <span key={tag} className="text-[10px] uppercase tracking-widest bg-white/5 border border-white/10 px-2 py-1 rounded text-gray-300">{tag}</span>
+              ))}
+            </div>
+            <button className="w-full mt-6 py-3 border border-gold/50 text-gold font-bold rounded-lg hover:bg-gold hover:text-black transition-all text-sm tracking-widest uppercase">
+              Ver Perfil Completo
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+const TechSection = () => (
+  <section className="py-24 bg-black/40 border-y border-white/5 px-6">
+    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+      <div className="space-y-8">
+        <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-tight">Nexxus <span className="text-gold">Tech Hub</span></h2>
+        <p className="text-gray-400 text-lg leading-relaxed">
+          Nossa vertente de tecnologia oferece consultoria para líderes que buscam eficiência digital. Atuamos com as tecnologias mais modernas do mercado para garantir que seu negócio e sua presença digital sejam impecáveis.
+        </p>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="p-6 bg-white/5 rounded-xl border border-white/10 hover:border-gold/30 transition-all group">
+            <Code className="text-gold mb-4 group-hover:scale-110 transition-transform" />
+            <h4 className="font-bold mb-2">Web Development</h4>
+            <p className="text-sm text-gray-500">Aplicações escaláveis com React, Next.js e Cloud Infrastructure.</p>
+          </div>
+          <div className="p-6 bg-white/5 rounded-xl border border-white/10 hover:border-gold/30 transition-all group">
+            <Smartphone className="text-gold mb-4 group-hover:scale-110 transition-transform" />
+            <h4 className="font-bold mb-2">Mobile First</h4>
+            <p className="text-sm text-gray-500">Desenvolvimento nativo e híbrido focado em alta performance UX.</p>
+          </div>
+          <div className="p-6 bg-white/5 rounded-xl border border-white/10 hover:border-gold/30 transition-all group">
+            <Shield className="text-gold mb-4 group-hover:scale-110 transition-transform" />
+            <h4 className="font-bold mb-2">Data Privacy</h4>
+            <p className="text-sm text-gray-500">Protocolos de segurança máxima para informações confidenciais.</p>
+          </div>
+          <div className="p-6 bg-white/5 rounded-xl border border-white/10 hover:border-gold/30 transition-all group">
+            <Globe className="text-gold mb-4 group-hover:scale-110 transition-transform" />
+            <h4 className="font-bold mb-2">Global Networking</h4>
+            <p className="text-sm text-gray-500">Conexão entre investidores e talentos de alta performance.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div className="relative">
+        <div className="absolute -inset-4 bg-gold/10 blur-3xl rounded-full" />
+        <div className="relative bg-[#1A1A1A] border border-white/10 p-8 rounded-2xl shadow-2xl">
+          <div className="flex gap-2 mb-6">
+            <div className="w-3 h-3 rounded-full bg-red-500/50" />
+            <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+            <div className="w-3 h-3 rounded-full bg-green-500/50" />
+          </div>
+          <div className="font-mono text-sm text-gray-400 space-y-2">
+            <p className="text-gold">const nexxusMission = () {"=>"} &#123;</p>
+            <p className="pl-4">return "Excellence in every interaction";</p>
+            <p className="text-blue-400 pl-4">// High performance networking active</p>
+            <p className="text-blue-400 pl-4">// Privacy protocols initialized</p>
+            <p className="pl-4">if (client.demand === "Elite") &#123;</p>
+            <p className="pl-8 text-green-400">deployNexxusExperience();</p>
+            <p className="pl-4">&#125;</p>
+            <p className="text-gold">&#125;</p>
+          </div>
+          <div className="mt-8 pt-8 border-t border-white/5 flex items-center justify-between">
+            <div className="flex -space-x-3">
+              {MODELS.map(m => (
+                <img key={m.id} src={m.image} className="w-10 h-10 rounded-full border-2 border-black object-cover" />
+              ))}
+              <div className="w-10 h-10 rounded-full bg-gold flex items-center justify-center text-black font-bold text-xs border-2 border-black">+12</div>
+            </div>
+            <span className="text-xs font-bold text-gold tracking-widest">TEAM STATUS: ONLINE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const BookingSection = () => {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    name: '',
+    service: 'Consultoria Digital + Acompanhamento',
+    date: '',
+    duration: '2 Horas'
+  });
+
+  return (
+    <section className="py-24 px-6 max-w-4xl mx-auto">
+      <div className="text-center mb-16 space-y-4">
+        <h2 className="text-4xl font-bold uppercase tracking-tight">Inicie sua <span className="text-gold">Experiência</span></h2>
+        <p className="text-gray-500 italic font-light">Seu tempo é o seu ativo mais valioso. Nós garantimos que ele seja inesquecível.</p>
+      </div>
+
+      <div className="bg-[#151515] border border-white/5 rounded-3xl p-8 md:p-12">
+        <div className="flex justify-between mb-12 relative">
+          <div className="absolute top-1/2 left-0 w-full h-px bg-white/5 -z-0" />
+          {[1, 2, 3].map(i => (
+            <div 
+              key={i} 
+              className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${step >= i ? 'bg-gold text-black shadow-[0_0_20px_rgba(212,175,55,0.4)]' : 'bg-white/5 text-gray-600 border border-white/10'}`}
+            >
+              {i}
+            </div>
+          ))}
+        </div>
+
+        {step === 1 && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <h3 className="text-xl font-bold border-l-4 border-gold pl-4">Selecione o Plano Base</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {['Digital Consulting', 'Lifestyle Partner', 'Event Attendance', 'Project Sprint'].map(type => (
+                <button 
+                  key={type}
+                  onClick={() => {setFormData({...formData, service: type}); setStep(2)}}
+                  className="p-6 rounded-xl border border-white/5 bg-white/5 text-left hover:border-gold/50 transition-all flex justify-between items-center group"
+                >
+                  <span className="font-medium">{type}</span>
+                  <ChevronRight size={16} className="text-gold group-hover:translate-x-1 transition-transform" />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <h3 className="text-xl font-bold border-l-4 border-gold pl-4">Informações de Contato</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input 
+                type="text" 
+                placeholder="Seu Nome/Pseudônimo" 
+                className="bg-white/5 border border-white/10 p-4 rounded-xl focus:outline-none focus:border-gold transition-all"
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+              />
+              <input 
+                type="date" 
+                className="bg-white/5 border border-white/10 p-4 rounded-xl focus:outline-none focus:border-gold transition-all"
+                onChange={(e) => setFormData({...formData, date: e.target.value})}
+              />
+              <select 
+                className="bg-white/5 border border-white/10 p-4 rounded-xl focus:outline-none focus:border-gold transition-all"
+                onChange={(e) => setFormData({...formData, duration: e.target.value})}
+              >
+                <option>2 Horas</option>
+                <option>4 Horas</option>
+                <option>Pernoite (High Performance)</option>
+                <option>Final de Semana (Tech Retreat)</option>
+              </select>
+              <button 
+                onClick={() => setStep(3)}
+                disabled={!formData.name}
+                className="bg-gold text-black font-bold p-4 rounded-xl disabled:opacity-50 hover:bg-white transition-all"
+              >
+                Prosseguir
+              </button>
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="text-center space-y-6 animate-in zoom-in duration-500">
+            <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Shield size={40} className="text-green-500" />
+            </div>
+            <h3 className="text-3xl font-bold uppercase italic">Solicitação Enviada com Sigilo</h3>
+            <p className="text-gray-400">
+              Olá {formData.name}, recebemos seu interesse em nosso plano <span className="text-gold font-bold">{formData.service}</span>. <br/>
+              Um consultor de lifestyle entrará em contato via WhatsApp/Signal para validar os detalhes e confirmar o agendamento em até 15 minutos.
+            </p>
+            <div className="pt-8 flex flex-col items-center gap-4">
+              <button 
+                className="flex items-center gap-2 text-gold hover:underline font-mono text-sm"
+                onClick={() => setStep(1)}
+              >
+                Realizar novo agendamento
+              </button>
+              <div className="text-[10px] text-gray-600 uppercase tracking-widest border border-white/5 px-4 py-2 rounded-full">
+                Protocolo: {Math.random().toString(36).substring(7).toUpperCase()}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-12 flex flex-col md:flex-row gap-8 justify-center">
+        <div className="flex items-center gap-3 text-gray-500 text-sm italic">
+          <Lock size={16} /> Pagamentos via Cripto ou Transferência Offshore
+        </div>
+        <div className="flex items-center gap-3 text-gray-500 text-sm italic">
+          <Shield size={16} /> Contrato de Confidencialidade (NDA) Padrão
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default App;
